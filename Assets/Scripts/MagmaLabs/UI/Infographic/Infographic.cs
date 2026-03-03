@@ -11,7 +11,8 @@ namespace MagmaLabs.UI{
         void SetValue(float value);
         void SetRange(float min, float max);                      
 
-        void Refresh();                             
+        void Refresh();
+        void SetColor(Color color);                              
 
         float currentValue { get; }
         Range<float> valueRange { get; }
@@ -22,7 +23,7 @@ namespace MagmaLabs.UI{
 
     public interface IInfographicEnhanced : IInfographic
     {
-        void SetColor(Color color);                 
+                  
         void SetAnimationCurve(AnimationCurve curve); 
         void AnimateToValue(float targetValue, float duration); 
         void StopAnimation();
@@ -53,6 +54,7 @@ namespace MagmaLabs.UI{
             if (valueRange.max - valueRange.min == 0) return 0f;
             return (currentValue - valueRange.min) / (valueRange.max - valueRange.min);
         }
+        public virtual void SetColor(Color color) { }
         public virtual void Refresh() { }
 
     }

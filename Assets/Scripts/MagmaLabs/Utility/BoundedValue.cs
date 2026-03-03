@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 
 using UnityEngine;
 
-namespace MagmaLabs.Utilities{
+namespace MagmaLabs{
 
 [System.Serializable]
 public struct BoundedValue<T> where T : ISerializable
@@ -48,6 +48,23 @@ public class Range<T> where T : IComparable<T>
 
     /// <summary>max value of the range.</summary>
     public T max { get; set; }
+
+        /// <summary>
+        /// Numeric length of the range (max - min) converted to double.
+        /// This avoids using `dynamic` which Unity's runtime doesn't support.
+        /// </summary>
+        public double length
+        {
+            get
+            {
+                // use Convert.ToDouble, will work for any IConvertible numeric type
+                double a = Convert.ToDouble(max);
+                double b = Convert.ToDouble(min);
+                return a - b;
+            }
+        }
+        
+    
 
     /// <summary>Presents the Range in readable format.</summary>
     /// <returns>String representation of the Range</returns>

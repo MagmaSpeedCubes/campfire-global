@@ -38,6 +38,22 @@ namespace MagmaLabs{
         public ShowIfLessThanOrEqualAttribute(string conditionField, object value) : base(conditionField, value) { }
     }
 
+    public class ShowIfAnyAttribute : ShowIfAttribute
+    {
+        // Accepts a single field name and multiple compare values:
+        // [ShowIfAny("state", State.A, State.B, State.C)]
+        public string[] conditionFields;
+        public object[] compareValues;
+
+        public ShowIfAnyAttribute(string conditionField, params object[] values) : base(conditionField, values != null && values.Length > 0 ? values[0] : null)
+        {
+            this.conditionFields = new string[] { conditionField };
+            this.compareValues = values ?? new object[0];
+            // Store the full values array in base.compareValue as a fallback
+            this.compareValue = this.compareValues;
+        }
+    }
+
     
 }
 
