@@ -32,6 +32,7 @@ public class TaskPointController : MonoBehaviour
         if (playerInRange)
         {
             inRangeDuration += Time.deltaTime;
+            OnHold.Invoke(inRangeDuration, holdTime);
         }
         if(inRangeDuration > holdTime)
         {

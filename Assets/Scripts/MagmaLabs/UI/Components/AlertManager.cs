@@ -11,23 +11,43 @@ namespace MagmaLabs.UI
 {
     public class AlertManager : MonoBehaviour
     {
+
+        [SerializeField]private Transform alertParent;
         [SerializeField]private GameObject simpleAlertPrefab, infoAlertPrefab;
 
-        public void BroadcastAlert(string title, float duration)
+        [HideInInspector]public static AlertManager instance;
+
+        void Awake()
         {
-            GameObject alert = Instantiate(simpleAlertPrefab);
+            if(instance == null)
+            {
+                instance = this;
+                DontDestroyOnLoad(this);
+            }
+            else
+            {
+                Debug.LogWarning("Multiple instances of AlertManager detected. Destroying duplicate.");
+                Destroy(this);
+            }
+        }
+
+        public void BroadcastAlert(string message, float duration)
+        {
+            GameObject alert = Instantiate(simpleAlertPrefab, alertParent);
+            
+            
             Alert alertBody = alert.GetComponent<Alert>();
 
-            alertBody.title.text = title;
+            alertBody.body.text = message;
             alertBody.duration = duration;
         }
 
-        public void BroadcastAlert(string title, Sprite icon, float duration)
+        public void BroadcastAlert(string message, Sprite icon, float duration)
         {
-            GameObject alert = Instantiate(simpleAlertPrefab);
+            GameObject alert = Instantiate(simpleAlertPrefab, alertParent);
             Alert alertBody = alert.GetComponent<Alert>();
 
-            alertBody.title.text = title;
+            alertBody.body.text = message;
             alertBody.icon.sprite = icon;
             alertBody.duration = duration;
         

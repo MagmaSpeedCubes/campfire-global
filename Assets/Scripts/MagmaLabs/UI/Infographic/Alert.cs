@@ -23,9 +23,9 @@ namespace MagmaLabs.UI{
 
         IEnumerator LifetimeCoroutine()
         {
-            yield return StartCoroutine(Animations.instance.PopIn(gameObject, 1.2f, duration * 0.1f));
-            yield return new WaitForSeconds(duration * 0.8f);
-            yield return StartCoroutine(Animations.instance.FadeUI(gameObject, 1f, 0f, duration * 0.1f));
+            yield return StartCoroutine(Animations.instance.PopIn(gameObject, 1.1f, duration * 0.1f));
+            yield return new WaitForSeconds(duration * 0.7f);
+            yield return StartCoroutine(Animations.instance.FadeUI(gameObject, 1f, 0f, duration * 0.2f));
             Destroy(gameObject);
         }
     }

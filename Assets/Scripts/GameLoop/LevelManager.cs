@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-
+using MagmaLabs.UI;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -33,12 +33,22 @@ public class LevelManager : MonoBehaviour
         obj.taskPoint.gameObject.SetActive(true);
 
         InGameHUDManager.instance.objectiveText.text = obj.description;
+        
         WaypointManager.instance.SetTarget(obj.taskPoint.transform);
 
     }
 
+    public void OnObjectiveProgress(float completed, float total)
+    {
+        InGameHUDManager.instance.DisplayProgress(completed, total);
+    }
+
     public void OnObjectiveCompleted()
     {
+        Objective obj = objectives[currentObjective];
+        AlertManager.instance.BroadcastAlert(obj.completionMessage, 2);
+
+
         currentObjective++;
         if(currentObjective >= objectives.Count)
         {
@@ -49,6 +59,10 @@ public class LevelManager : MonoBehaviour
             BeginObjective();
         }
     }
+
+
+
+
 }
 
 
