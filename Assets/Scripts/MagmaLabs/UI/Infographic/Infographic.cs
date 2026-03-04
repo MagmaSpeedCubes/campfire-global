@@ -1,8 +1,10 @@
 using System;
 
 using UnityEngine;
+using UnityEngine.Events;
 
 using MagmaLabs;
+
 
 namespace MagmaLabs.UI{
 
@@ -28,8 +30,9 @@ namespace MagmaLabs.UI{
         void AnimateToValue(float targetValue, float duration); 
         void StopAnimation();
         void SetPrecision(int decimals);
-        event Action<float> OnValueChanged;
-        event Action OnAnimationComplete;
+
+        void HandleOverflow();
+
 
     }
     [System.Serializable]
@@ -37,6 +40,7 @@ namespace MagmaLabs.UI{
     {
         public virtual float currentValue { get; protected set; }
         public virtual Range<float> valueRange { get; protected set; }
+        
 
         public virtual void SetValue(float value)
         {
@@ -63,10 +67,10 @@ namespace MagmaLabs.UI{
     {
         public virtual AnimationCurve animationCurve{get; protected set;}
         public int precision { get; protected set; }
+        public virtual OverflowBehaviour overflowBehaviour { get; protected set; }
         
-        public event Action<float> OnValueChanged;
-        public event Action OnAnimationComplete;
-
+        public UnityEvent<string> OnValueChanged;
+        public UnityEvent OnAnimationComplete;
         public virtual void SetColor(Color color) { }
         public virtual void SetAnimationCurve(AnimationCurve curve)
         {
@@ -79,5 +83,14 @@ namespace MagmaLabs.UI{
             precision = decimals;
         }
 
+        public virtual void HandleOverflow(){}
+
+    }
+
+    public enum OverflowBehaviour
+    {
+        Clamp,
+        Loop, 
+        Overload
     }
 }

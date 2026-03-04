@@ -3,10 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.Events;
 using TMPro;
 
 using MagmaLabs.Animation;
 using MagmaLabs.Utilities;
+using MagmaLabs;
 
 namespace MagmaLabs.UI{
     [CreateAssetMenu(fileName = "TMPEnhanced", menuName = "MagmaLabs/UI/TMPEnhanced", order = 1)]
@@ -16,6 +18,10 @@ public class TMPEnhanced : TextMeshProUGUI
         private string fullText = "";
         private int writeOn = 0;
         private bool writeActive = false;
+        private AnimationCurve animationCurve = AnimationCurve.Linear(0,0,1,1);
+
+        public UnityEvent<string> OnValueChanged;
+        public UnityEvent OnAnimationComplete;
 
         void Start()
         {
@@ -273,8 +279,22 @@ public class TMPEnhanced : TextMeshProUGUI
             SetText(""+value);
         }
 
+        public void SetAnimationCurve(AnimationCurve curve)
+        {
+            animationCurve = curve;
+        }
+
+        public void StopAnimation()
+        {
+            StopAllCoroutines();
+        }
+
+
+
 
     }
+
+
 
 
 }
