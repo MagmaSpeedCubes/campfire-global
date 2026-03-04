@@ -8,6 +8,7 @@ using UnityEngine.Events;
 public class LevelManager : MonoBehaviour
 {
 
+    public string levelObjective;
     public List<Objective> objectives;
     int currentObjective = 0;
 
@@ -17,7 +18,16 @@ public class LevelManager : MonoBehaviour
 
     void Start()
     {
-        BeginLevel();//for now
+
+        StartCoroutine(BeginLevelCoroutine());
+    }
+
+    IEnumerator BeginLevelCoroutine()
+    {
+        yield return null;
+        AlertManager.instance.BroadcastAlert(levelObjective, 2);
+        yield return new WaitForSeconds(2f);
+        BeginLevel();
     }
 
     public void BeginLevel()
@@ -29,6 +39,7 @@ public class LevelManager : MonoBehaviour
 
     public void BeginObjective()
     {
+
         Objective obj = objectives[currentObjective];
         obj.taskPoint.gameObject.SetActive(true);
 
@@ -53,6 +64,7 @@ public class LevelManager : MonoBehaviour
         if(currentObjective >= objectives.Count)
         {
             OnLevelClear.Invoke();
+            
         }
         else
         {

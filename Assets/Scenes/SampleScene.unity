@@ -1774,6 +1774,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a0412d940c7a4f8ebf4bbd7400d313d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelManager
+  levelObjective: Do some stuff
   objectives:
   - description: Do a thing
     completionMessage: Yay you did a thing
