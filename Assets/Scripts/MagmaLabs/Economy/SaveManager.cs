@@ -2,7 +2,9 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+using MagmaLabs;
 using MagmaLabs.Editor;
+
 
 namespace MagmaLabs.Economy{
     public class SaveManager : MonoBehaviour
@@ -122,19 +124,7 @@ namespace MagmaLabs.Economy{
 
 
 
-    [System.Serializable]
-    public class SerializableKeyValue<T>
-    {
-        public string key;
-        public T value;
-        
-        public SerializableKeyValue() { }
-        public SerializableKeyValue(string key, T value)
-        {
-            this.key = key;
-            this.value = value;
-        }
-    }
+
 
     [System.Serializable]
     public class SaveData 

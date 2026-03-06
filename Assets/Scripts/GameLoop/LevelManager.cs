@@ -10,6 +10,8 @@ public class LevelManager : MonoBehaviour
 
     public string levelObjective;
     public List<Objective> objectives;
+
+    //public List<LevelEvent> levelTimeline;
     int currentObjective = 0;
 
     public UnityEvent OnLevelBegin;
@@ -81,6 +83,9 @@ public class LevelManager : MonoBehaviour
 public struct LevelRuntime
 {
     public LevelState levelState;
+    public int funds;
+
+
 }
 
 public enum LevelState
@@ -92,3 +97,5 @@ public enum LevelState
     Playing
 
 }
+
+

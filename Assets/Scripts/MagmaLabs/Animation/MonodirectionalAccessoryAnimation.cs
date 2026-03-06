@@ -73,6 +73,20 @@ namespace MagmaLabs.Animation
                 timeSinceLastFrame = 0f;
             }
         }
+    
+        public void SetSprites(Sprite[] sprites, bool leftFacing)
+        {
+            if (leftFacing)
+            {
+                leftSprites = sprites;
+                useLeftFacingSprites = true;
+            }
+            else
+            {
+                rightSprites = sprites;
+                useLeftFacingSprites = false;
+            }
+        }
     }   
 
 
