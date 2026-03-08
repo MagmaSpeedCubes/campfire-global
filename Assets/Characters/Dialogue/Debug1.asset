@@ -24,6 +24,4 @@ MonoBehaviour:
   - characterID: 1
     message: Ohhhh, thanks for your help
   continuations:
-    items:
-    - key: Repeat
-      value: {fileID: 11400000}
+    items: []

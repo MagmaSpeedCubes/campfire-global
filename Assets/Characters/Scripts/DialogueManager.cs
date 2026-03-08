@@ -1,16 +1,37 @@
+using System.Collections.Generic;
+
 using UnityEngine;
 
-public class DialogueCanvas : MonoBehaviour
+using MagmaLabs;
+
+public class DialogueManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField]private Canvas canvas;
+    [SerializeField]private GameObject dialogueBoxPrefab;
+
+    [SerializeField]private List<DialogueBlock> startingBlocks;
+
+    public static DialogueManager instance;
+
+    void Awake()
     {
-        
+        if (instance != null && instance != this)
+        {
+            Destroy(this.gameObject);
+            Debug.LogWarning("Multiple instances of DialogueManager detected. Destroying duplicate.");
+        }
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    void SpawnDialogue(List<Character> characters)
     {
-        
+        GameObject newBox = Instantiate(dialogueBoxPrefab, canvas.gameObject.transform);
+        DialogueController dc = newBox.GetComponent<DialogueController>();
+        dc.SetCharacters(characters);
     }
+
 }

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -6,7 +8,7 @@ using MagmaLabs;
 using MagmaLabs.UI;
 public class DialogueController : MonoBehaviour
 {
-
+    [SerializeField] private RectTransform dialogueBox;
     [SerializeField] private TextMeshProUGUI mainTitleBlock;
     [SerializeField] private TMPEnhanced mainTextBlock;
     
@@ -14,11 +16,36 @@ public class DialogueController : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI[] advanceButtonText;
 
+    private List<Character> characters;
+
+    
+
     private int index = 0;
 
     void Start(){
-        AdvanceLine();//for testing
+        MouseClickManager.instance.OnLeftClick.AddListener(OnLeftClick);
     }
+
+    public void SetCharacters(List<Character> newchars){
+        characters = newchars;
+    }
+
+
+
+    public void OnLeftClick(Vector2 screenPos, Vector3 worldPos){
+        // Convert screen position to local position within the dialogue box
+        Vector2 localPoint;
+        if (RectTransformUtility.ScreenPointToLocalPointInRectangle(dialogueBox, screenPos, null, out localPoint))
+        {
+            // Check if the local point is within the dialogue box's rect
+            if (dialogueBox.rect.Contains(localPoint))
+            {
+                AdvanceLine();
+            }
+        }
+    }
+
+    
 
     public void BeginDialogue(DialogueBlock newBlock)
     {
@@ -80,13 +107,7 @@ public class DialogueController : MonoBehaviour
 
     private void EndDialogue()
     {
-        // simple placeholder: disable all buttons and optionally clear text
-        for (int i = 0; i < advanceButtonText.Length; i++)
-        {
-            advanceButtonText[i].transform.parent.gameObject.SetActive(false);
-        }
-        // could trigger an event or callback here
-        Debug.Log("Dialogue ended");
+        Destroy(dialogueBox.gameObject);
     }
 
     public void AdvanceDialogueBlock(int button)

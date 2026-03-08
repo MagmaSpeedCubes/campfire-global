@@ -29,6 +29,7 @@ public class LevelManager : MonoBehaviour
         yield return null;
         AlertManager.instance.BroadcastAlert(levelObjective, 2);
         yield return new WaitForSeconds(2f);
+        AudioManager.instance.PlayBGM("mainTheme");
         BeginLevel();
     }
 
