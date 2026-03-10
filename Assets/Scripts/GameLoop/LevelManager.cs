@@ -18,9 +18,30 @@ public class LevelManager : MonoBehaviour
     public UnityEvent OnLevelClear;
     public UnityEvent OnLevelFail;
 
+    public LevelRuntime levelRuntime;
+
+    public static LevelManager instance;
+
+
+    void Awake()
+    {
+        if (instance != null && instance != this)
+        {
+            Destroy(this);
+            levelRuntime = new LevelRuntime();
+            Debug.LogWarning("Multiple instances of DialogueManager detected. Destroying duplicate.");
+        }
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
+    
+    }
+
     void Start()
     {
-
+        
         StartCoroutine(BeginLevelCoroutine());
     }
 
@@ -80,15 +101,16 @@ public class LevelManager : MonoBehaviour
 
 }
 
-
+[System.Serializable]
 public struct LevelRuntime
 {
     public LevelState levelState;
     public int funds;
+    public Character playerCharacter;
 
 
 }
-
+[System.Serializable]
 public enum LevelState
 {
     Paused,

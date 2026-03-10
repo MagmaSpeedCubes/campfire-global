@@ -16,6 +16,7 @@ public class DialogueController : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI[] advanceButtonText;
 
+    [SerializeField] private Image shirtImage, hairImage;
     private List<Character> characters;
 
     
@@ -64,6 +65,13 @@ public class DialogueController : MonoBehaviour
         // show current line
         mainTextBlock.SetHiddenText(activeBlock.dialogue[index].message);
         StartCoroutine(mainTextBlock.WriteOnNormalized(1, 1));
+
+        int speakingCharacterID = activeBlock.dialogue[index].characterID;
+        Character speakingCharacter = characters[speakingCharacterID];
+
+        shirtImage.sprite = speakingCharacter.accessories.Get("shirt").sprites.ElementAt(0).value;
+
+
         //Debug.Log("Message: " + activeBlock.dialogue[index].message);
         
         index++;

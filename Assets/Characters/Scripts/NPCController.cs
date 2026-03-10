@@ -4,52 +4,87 @@ using UnityEngine;
 
 using MagmaLabs;
 using MagmaLabs.Animation;
+using MagmaLabs.Controllers;
 
 
 public class NPCController : MonoBehaviour
 {
     [Tooltip("The chance your character is female")]
     [Range(0f, 1f)][SerializeField]private float genderRatio = 0.3f;
-    [SerializeField]private SerializableDictionary<List<Sprite>> shirts;
-    [SerializeField]private SerializableDictionary<List<Sprite>> maleHair;
-    [SerializeField]private SerializableDictionary<List<Sprite>> femaleHair;
+    [SerializeField]private SerializableDictionary<Item> shirts;
+    [SerializeField]private SerializableDictionary<Item> maleHair;
+    [SerializeField]private SerializableDictionary<Item> femaleHair;
+    
+    [SerializeField]private MonodirectionalCharacterAnimator shirtAnimator;
+    [SerializeField]private MonodirectionalCharacterAnimator hairAnimator;
+    [SerializeField]private AreaController areaController;
 
-    [SerializeField]private MonodirectionalAccessoryAnimator shirtAnimator;
-    [SerializeField]private MonodirectionalAccessoryAnimator hairAnimator;
+    public Character character;
 
     void Start()
     {
+
+        if (character == null)
+        {
+            character = ScriptableObject.CreateInstance<Character>();
+        }
+
+        if (character.accessories == null)
+        {
+            character.accessories = new SerializableDictionary<Item>();
+        }
+
         // pick gender based on ratio
         bool isMale = Random.value < genderRatio;
 
-        // choose random hair list from appropriate dictionary
+        // choose random hair item from appropriate dictionary
         var hairDict = isMale ? maleHair : femaleHair;
-        if (hairDict != null && hairDict.Count > 0)
+        Item chosenHair = GetRandomItem(hairDict);
+
+        // choose random shirt item
+        Item chosenShirt = GetRandomItem(shirts);
+
+        if (chosenHair != null)
         {
-            int idx = Random.Range(0, hairDict.Count);
-            var hairList = hairDict.Items[idx].value;
-            if (hairList != null && hairList.Count > 0)
+            character.accessories.Set("hair", chosenHair);
+            if (hairAnimator != null)
             {
-                // randomly decide orientation for hair
-                bool leftFacing = Random.value < 0.5f;
-                hairAnimator.SetSprites(hairList.ToArray(), leftFacing);
+                hairAnimator.SetItem(chosenHair);
             }
         }
 
-        // choose random shirt list
-        if (shirts != null && shirts.Count > 0)
+        if (chosenShirt != null)
         {
-            int idx = Random.Range(0, shirts.Count);
-            var shirtList = shirts.Items[idx].value;
-            if (shirtList != null && shirtList.Count > 0)
+            character.accessories.Set("shirt", chosenShirt);
+            if (shirtAnimator != null)
             {
-                bool leftFacing = Random.value < 0.5f;
-                shirtAnimator.SetSprites(shirtList.ToArray(), leftFacing);
+                shirtAnimator.SetItem(chosenShirt);
             }
         }
     }
 
+    public void OnEnterRange(Collider2D other, string name){
+        if(other.GetComponent<TopDown2DPlayerController>() == null){return;}
 
+        areaController.gameObject.SetActive(false);
+        List<Character> characterList = new List<Character>();
+        characterList.Add(LevelManager.instance.levelRuntime.playerCharacter);
+        characterList.Add(character);
+        
+        DialogueManager.instance.GenerateDialogue(characterList);
+    }
+
+
+    private static Item GetRandomItem(SerializableDictionary<Item> dictionary)
+    {
+        if (dictionary == null || dictionary.Count == 0)
+        {
+            return null;
+        }
+
+        int idx = Random.Range(0, dictionary.Count);
+        return dictionary.Items[idx].value;
+    }
 
 
 

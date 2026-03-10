@@ -9,6 +9,7 @@ namespace MagmaLabs.Controllers{
         private Vector2 direction;
         [Header("Drag the player rigidbody here")]
         public GameObject character;
+        [SerializeField]private Character profile;
         public InputAction playerControls;
         [Header("Set the player speed here")]
         [SerializeField] private float speed = 8f;
@@ -18,6 +19,7 @@ namespace MagmaLabs.Controllers{
         private void OnEnable()
         {
             playerControls.Enable();
+            LevelManager.instance.levelRuntime.playerCharacter = profile;
         }
 
         private void OnDisable()
@@ -40,6 +42,7 @@ namespace MagmaLabs.Controllers{
         private void Update()
         {
             direction = playerControls.ReadValue<Vector2>();
+            
         }
     }
 }

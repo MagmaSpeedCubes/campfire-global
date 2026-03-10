@@ -11,6 +11,7 @@ public class DialogueManager : MonoBehaviour
 
     [SerializeField]private List<DialogueBlock> startingBlocks;
 
+
     public static DialogueManager instance;
 
     void Awake()
@@ -23,11 +24,10 @@ public class DialogueManager : MonoBehaviour
         else
         {
             instance = this;
-            DontDestroyOnLoad(this.gameObject);
         }
     }
 
-    void SpawnDialogue(List<Character> characters)
+    public void GenerateDialogue(List<Character> characters)
     {
         GameObject newBox = Instantiate(dialogueBoxPrefab, canvas.gameObject.transform);
         DialogueController dc = newBox.GetComponent<DialogueController>();

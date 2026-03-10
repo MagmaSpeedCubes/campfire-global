@@ -5,11 +5,14 @@ using UnityEngine.Events;
 
 public class AreaController : MonoBehaviour
 {
+    [SerializeField]private bool disableOnEnter = false; 
+
     public string areaName;
     public List<Collider2D> collidersInArea;
     public UnityEvent<Collider2D, string> OnEnterArea; 
     public UnityEvent<Collider2D, string> OnExitArea; 
     public UnityEvent<Collider2D, string> OnRemainInArea; 
+    
     
     void FixedUpdate()
     {
@@ -20,7 +23,9 @@ public class AreaController : MonoBehaviour
     public void OnTriggerEnter2D(Collider2D other)
     {
         OnEnterArea.Invoke(other, areaName);
+        if(disableOnEnter){this.enabled = false;}
         collidersInArea.Add(other);
+        
     }
     public void OnTriggerExit2D(Collider2D other)
     {
