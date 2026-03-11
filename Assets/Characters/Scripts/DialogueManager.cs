@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 using UnityEngine;
@@ -32,6 +33,11 @@ public class DialogueManager : MonoBehaviour
         GameObject newBox = Instantiate(dialogueBoxPrefab, canvas.gameObject.transform);
         DialogueController dc = newBox.GetComponent<DialogueController>();
         dc.SetCharacters(characters);
+
+        System.Random r = new System.Random();        
+        dc.SetActiveBlock(startingBlocks[r.Next(0, startingBlocks.Count)]);
+
+
     }
 
 }

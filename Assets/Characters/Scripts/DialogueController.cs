@@ -25,10 +25,15 @@ public class DialogueController : MonoBehaviour
 
     void Start(){
         MouseClickManager.instance.OnLeftClick.AddListener(OnLeftClick);
+        AdvanceLine();
     }
 
     public void SetCharacters(List<Character> newchars){
         characters = newchars;
+    }
+
+    public void SetActiveBlock(DialogueBlock newblock){
+        activeBlock = newblock;
     }
 
 
@@ -70,6 +75,7 @@ public class DialogueController : MonoBehaviour
         Character speakingCharacter = characters[speakingCharacterID];
 
         shirtImage.sprite = speakingCharacter.accessories.Get("shirt").sprites.ElementAt(0).value;
+        hairImage.sprite = speakingCharacter.accessories.Get("hair").sprites.ElementAt(0).value;
 
 
         //Debug.Log("Message: " + activeBlock.dialogue[index].message);

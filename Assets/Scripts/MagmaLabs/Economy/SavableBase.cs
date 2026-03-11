@@ -7,12 +7,12 @@ namespace MagmaLabs.Economy{
         public string id, name; 
         public SerializableDictionary<string> tags = new SerializableDictionary<string>();
 
-        public virtual string Serialize()
+        public virtual string ToString()
         {
             return JsonUtility.ToJson(this);
         }
 
-        public virtual void LoadFromSerialized(string serialized)
+        public virtual void FromString(string serialized)
         {
             if (string.IsNullOrWhiteSpace(serialized))
             {

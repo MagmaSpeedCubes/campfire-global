@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 
-public class LevelManager : MonoBehaviour
+public class LevelController : MonoBehaviour
 {
 
     public string levelObjective;
@@ -20,7 +20,7 @@ public class LevelManager : MonoBehaviour
 
     public LevelRuntime levelRuntime;
 
-    public static LevelManager instance;
+    public static LevelController instance;
 
 
     void Awake()
@@ -29,7 +29,7 @@ public class LevelManager : MonoBehaviour
         {
             Destroy(this);
             levelRuntime = new LevelRuntime();
-            Debug.LogWarning("Multiple instances of DialogueManager detected. Destroying duplicate.");
+            Debug.LogWarning("Multiple instances of LevelController detected. Destroying duplicate.");
         }
         else
         {
@@ -42,7 +42,7 @@ public class LevelManager : MonoBehaviour
     void Start()
     {
         
-        StartCoroutine(BeginLevelCoroutine());
+        //StartCoroutine(BeginLevelCoroutine());
     }
 
     IEnumerator BeginLevelCoroutine()
@@ -65,11 +65,20 @@ public class LevelManager : MonoBehaviour
     {
 
         Objective obj = objectives[currentObjective];
-        obj.taskPoint.gameObject.SetActive(true);
+        if (obj.taskPoint != null)
+        {
+            obj.taskPoint.gameObject.SetActive(true);
+            WaypointManager.instance.SetTarget(obj.taskPoint.transform);
+        }
 
-        InGameHUDManager.instance.objectiveText.text = obj.description;
-        
-        WaypointManager.instance.SetTarget(obj.taskPoint.transform);
+        if (!string.IsNullOrWhiteSpace(obj.description))
+        {
+            InGameHUDManager.instance.objectiveText.text = obj.description;
+        }
+
+        obj.OnObjectiveStarted?.Invoke();
+        TryBroadcastAlert(obj.startAlert);
+        TryBeginCutscene(obj.startCutscene);
 
     }
 
@@ -81,7 +90,12 @@ public class LevelManager : MonoBehaviour
     public void OnObjectiveCompleted()
     {
         Objective obj = objectives[currentObjective];
-        AlertManager.instance.BroadcastAlert(obj.completionMessage, 2);
+        if (!TryBroadcastAlert(obj.completionAlert) && !string.IsNullOrWhiteSpace(obj.completionMessage))
+        {
+            AlertManager.instance.BroadcastAlert(obj.completionMessage, 2f);
+        }
+        TryBeginCutscene(obj.completionCutscene);
+        obj.OnObjectiveCompleted?.Invoke();
 
 
         currentObjective++;
@@ -94,6 +108,40 @@ public class LevelManager : MonoBehaviour
         {
             BeginObjective();
         }
+    }
+
+    public void EndCutscene()
+    {
+        levelRuntime.levelState = LevelState.Playing;
+    }
+
+    private bool TryBroadcastAlert(Objective.ObjectiveAlert alert)
+    {
+        if (!alert.enabled)
+        {
+            return false;
+        }
+
+        string message = alert.message;
+        if (string.IsNullOrWhiteSpace(message))
+        {
+            return false;
+        }
+
+        float duration = alert.duration <= 0f ? 2f : alert.duration;
+        AlertManager.instance.BroadcastAlert(message, duration);
+        return true;
+    }
+
+    private void TryBeginCutscene(Objective.ObjectiveCutscene cutscene)
+    {
+        if (!cutscene.enabled)
+        {
+            return;
+        }
+
+        levelRuntime.levelState = LevelState.InCutscene;
+        cutscene.OnBegin?.Invoke();
     }
 
 
@@ -120,5 +168,3 @@ public enum LevelState
     Playing
 
 }
-
-

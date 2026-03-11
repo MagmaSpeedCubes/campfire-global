@@ -35,10 +35,23 @@ public class NPCController : MonoBehaviour
         }
 
         // pick gender based on ratio
-        bool isMale = Random.value < genderRatio;
+        bool isMale = Random.value > genderRatio;
 
-        // choose random hair item from appropriate dictionary
-        var hairDict = isMale ? maleHair : femaleHair;
+        SerializableDictionary<Item> hairDict;
+
+        Debug.Log("Is male: " + isMale);
+        if (isMale)
+        {
+            hairDict = maleHair;
+            Debug.Log("Using male hair");
+        }
+        else
+        {
+            hairDict = femaleHair;
+            Debug.Log("Using female hair");
+        }
+
+        
         Item chosenHair = GetRandomItem(hairDict);
 
         // choose random shirt item
@@ -47,9 +60,11 @@ public class NPCController : MonoBehaviour
         if (chosenHair != null)
         {
             character.accessories.Set("hair", chosenHair);
+            Debug.Log(chosenHair.name);
             if (hairAnimator != null)
             {
                 hairAnimator.SetItem(chosenHair);
+                
             }
         }
 
@@ -68,7 +83,7 @@ public class NPCController : MonoBehaviour
 
         areaController.gameObject.SetActive(false);
         List<Character> characterList = new List<Character>();
-        characterList.Add(LevelManager.instance.levelRuntime.playerCharacter);
+        characterList.Add(LevelController.instance.levelRuntime.playerCharacter);
         characterList.Add(character);
         
         DialogueManager.instance.GenerateDialogue(characterList);

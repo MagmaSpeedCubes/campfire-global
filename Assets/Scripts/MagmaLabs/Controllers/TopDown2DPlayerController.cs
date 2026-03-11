@@ -19,7 +19,11 @@ namespace MagmaLabs.Controllers{
         private void OnEnable()
         {
             playerControls.Enable();
-            LevelManager.instance.levelRuntime.playerCharacter = profile;
+            if(profile == null)
+            {
+                profile = ScriptableObject.CreateInstance<Character>();
+            }
+            LevelController.instance.levelRuntime.playerCharacter = profile;
         }
 
         private void OnDisable()
